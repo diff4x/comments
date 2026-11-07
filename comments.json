@@ -1,0 +1,31 @@
+{
+  "generatedAt": "2026-11-07T19:45:20.113Z",
+  "discussionCount": 2,
+  "commentCount": 1,
+  "comments": [
+    {
+      "id": "DC_kwDOSlizX84BA-De",
+      "body": "🎉 first comment by myself, good luck big boy!",
+      "url": "https://github.com/diff4x/comments/discussions/4#discussioncomment-17031390",
+      "createdAt": "2026-05-23T10:43:29Z",
+      "updatedAt": "2026-05-23T10:43:29Z",
+      "author": {
+        "login": "diff4x",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/222525381?u=5d3d4e1d888b7c6bddf8ea42de694e4067b73d44&v=4",
+        "url": "https://github.com/diff4x"
+      },
+      "isAnswer": false,
+      "parentId": null,
+      "discussion": {
+        "id": "D_kwDOSlizX84Amm5-",
+        "number": 4,
+        "title": "98",
+        "url": "https://github.com/diff4x/comments/discussions/4",
+        "category": {
+          "name": "General",
+          "slug": "general"
+        }
+      }
+    }
+  ]
+}
