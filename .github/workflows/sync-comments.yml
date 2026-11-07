@@ -1,0 +1,60 @@
+name: Sync comments
+
+on:
+  discussion:
+    types:
+      - created
+      - edited
+      - deleted
+      - category_changed
+
+  discussion_comment:
+    types:
+      - created
+      - edited
+      - deleted
+
+  workflow_dispatch:
+
+  schedule:
+    - cron: "0 3 * * *"
+
+permissions:
+  contents: write
+  discussions: read
+
+concurrency:
+  group: sync-comments
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Generate comments.json
+        run: node scripts/fetch-comments.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Commit comments.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add comments.json
+
+          if git diff --cached --quiet; then
+            echo "No changes to comments.json"
+          else
+            git commit -m "chore: update comments.json"
+            git push
+          fi
