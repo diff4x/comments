@@ -202,14 +202,42 @@ async function main() {
     (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
   );
 
-  const output = {
-    generatedAt: new Date().toISOString(),
+  const outputPath = path.join(process.cwd(), "comments.json");
+
+  // 1. 构造本次获取到的纯数据内容
+  const newData = {
     discussionCount: discussions.length,
     commentCount: allComments.length,
     comments: allComments,
   };
 
-  const outputPath = path.join(process.cwd(), "comments.json");
+  // 2. 尝试读取并解析现有的 comments.json
+  let isSame = false;
+  try {
+    const existingFileContent = await fs.readFile(outputPath, "utf8");
+    const existingJson = JSON.parse(existingFileContent);
+    
+    // 移旧文件里的 generatedAt 字段，以便纯数据对比
+    delete existingJson.generatedAt;
+
+    if (JSON.stringify(existingJson) === JSON.stringify(newData)) {
+      isSame = true;
+    }
+  } catch (e) {
+    // 文件可能不存在或其他错误，忽略并当作需要写入
+  }
+
+  // 3. 如果内容完全一致，则不更新文件，保留原文件的修改时间戳
+  if (isSame) {
+    console.log("No changes detected in comments. Skipping file write.");
+    return;
+  }
+
+  // 4. 内容有变化，带上新的 generatedAt 写入文件
+  const output = {
+    generatedAt: new Date().toISOString(),
+    ...newData,
+  };
 
   await fs.writeFile(
     outputPath,
